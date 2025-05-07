@@ -1,0 +1,25 @@
+version: '3'
+
+env:
+  BUILD_CONTEXT: unset
+  TASK_FILE: unset
+  PLAYDIR: unset
+  STATICRYPT_PASSWORD: unset
+
+tasks:
+  build:
+    desc: Build the Container Image using podman
+    dotenv: ['.env', '{{.ENV}}/.env', '{{.HOME}}/.env']
+    cmds:
+      - podman build -t staticrypt:latest "${BUILD_CONTEXT}" --build-context scripts=.
+
+  encrypt-podman:
+    desc: Use staticrypt to encrypt $TASK_FILE with $STATICRYPT_PASSWORD
+    dotenv: ['.env', '{{.ENV}}/.env', '{{.HOME}}/.env']
+    cmds:
+      - ./scripts/encrypt-file.sh
+
+  enter-container:
+    desc: drop into container bypass entrypoint
+    cmds:
+      - podman run -it --entrypoint /bin/bash staticrypt:latest

@@ -1,0 +1,14 @@
+version: '3'
+
+env:
+  PLAYDIR: "/tmp/"
+
+tasks:
+  build:
+    cmds:
+      - podman build -t ansible:latest .
+
+  run:
+    cmds:
+      - podman run -v $PLAYDIR:/home/ansible/playbook/:ro -it ansible
+

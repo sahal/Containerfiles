@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+
+
+#for ver in 18 19 20 21 22 23; do
+for ver in 22 23; do
+  node_ver_dir_name="node-${ver}"
+  mkdir -p "${node_ver_dir_name}"
+  pushd "${node_ver_dir_name}"
+  cp ../github.cer ./
+  cp ../Dockerfile ./
+  cp ../install.sh ./
+#  cp ../joplin/joplin-3.1.24-modified.tar.gz ./
+  sed -i s/node:18/node:${ver}/ ./Dockerfile
+  podman build -t "joplin-build-node-${ver}" .
+  popd
+done
